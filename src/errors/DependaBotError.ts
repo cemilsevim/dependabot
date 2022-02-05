@@ -1,5 +1,5 @@
 class DependaBotError extends Error {
-	constructor(message: string = 'Dependa bot error!') {
+	constructor(message: string = 'Dependabot error!') {
 		super(message);
 
 		this.name = 'DependaBotError';

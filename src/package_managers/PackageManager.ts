@@ -1,3 +1,11 @@
-abstract class PackageManager {}
+import { PackageFetchResponse } from "../types/PackageManager";
 
-export default PackageManager;
+export abstract class PackageManager {
+	protected apiUrl: string;
+
+	constructor(apiUrl: string) {
+		this.apiUrl = apiUrl;
+	}
+    
+	abstract fetchPackage(packageName: string): Promise<PackageFetchResponse>;
+}

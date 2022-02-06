@@ -1,13 +1,22 @@
 import axios from 'axios';
 import { Git } from '../types';
 import { Client } from './Client';
-import FileNotFoundError from '../errors/git/FileNotFoundError';
+import FileNotFoundError from '../errors/git/GCFileNotFoundError';
 
 class GithubClient extends Client {
-	protected searchCodeApiUrl = `${this.apiUrl}/search/code`;
+	private static instance: GithubClient;
+	private searchCodeApiUrl = `${this.apiUrl}/search/code`;
 
-	constructor(apiUrl: string = 'https://api.github.com') {
-		super(apiUrl);
+	private constructor() {
+		super('https://api.github.com');
+	}
+
+	public static getInstance(): GithubClient {
+		if (!GithubClient.instance) {
+			GithubClient.instance = new GithubClient();
+		}
+
+		return GithubClient.instance;
 	}
 
 	async fetchFileContents(repositoryUrl: string, fileNames: string[]) {
@@ -50,7 +59,9 @@ class GithubClient extends Client {
 		filename = filename.slice(0, -1);
 		q += filename;
 
-		const searchResultResponse = await axios.get(`${this.searchCodeApiUrl}?${q}`);
+		const searchResultResponse = await axios.get(
+			`${this.searchCodeApiUrl}?${q}`
+		);
 		const searchResultResponseData = searchResultResponse.data;
 		const items = searchResultResponseData.items;
 

@@ -1,7 +1,7 @@
+import GCNotFoundError from './errors/git/GCNotFoundError';
 import { Client } from './git_clients/Client';
-import GithubClient from './git_clients/GithubClient';
-import { Git } from './types';
-import { FileContent } from './types/Git';
+import { ClientFactory } from './git_clients/ClientFactory';
+import { FileContent, GitClientNames } from './types/Git';
 
 interface Fetched {
 	client: Client;
@@ -10,11 +10,8 @@ interface Fetched {
 
 class FileFetcher {
 	async fetch(repositoryUrl: string, fileNames: string[]): Promise<Fetched> {
-		const gitProvider = 'github.com';
-		const gitClients = {
-			'github.com': GithubClient,
-		};
-		const gitClient: Client = new gitClients[gitProvider]();
+		const gitProvider = this.getClientNameByRepositoryUrl(repositoryUrl);
+		const gitClient: Client = ClientFactory.getClientInstance(gitProvider);
 		const fileContents = await gitClient.fetchFileContents(
 			repositoryUrl,
 			fileNames
@@ -24,6 +21,18 @@ class FileFetcher {
 			client: gitClient,
 			fileContents,
 		};
+	}
+
+	getClientNameByRepositoryUrl(repositoryUrl: string): GitClientNames {
+		let clientName: GitClientNames;
+
+		if (repositoryUrl.includes('github.com')) {
+			clientName = 'github';
+		} else {
+			throw new GCNotFoundError();
+		}
+
+		return clientName;
 	}
 }
 

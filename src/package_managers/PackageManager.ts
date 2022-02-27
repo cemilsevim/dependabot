@@ -1,4 +1,4 @@
-import { PackageFetchResponse } from "../types/PackageManager";
+import { Package } from "../types/PackageManager";
 
 export abstract class PackageManager {
 	protected apiUrl: string;
@@ -7,5 +7,5 @@ export abstract class PackageManager {
 		this.apiUrl = apiUrl;
 	}
     
-	abstract fetchPackage(packageName: string): Promise<PackageFetchResponse>;
+	abstract fetchPackage(packageName: string): Promise<Package>;
 }

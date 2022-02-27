@@ -1,15 +1,17 @@
 export type PackageManagerNames = 'npm' | 'composer';
-export interface Package {
-	name: string;
-	description: string;
-}
-export interface PackageVersion extends Package {
-	version: string;
-}
 
-export type PackageFetchResponse = {
+export type Package = {
 	name: string;
 	description: string;
 	latestVersion: PackageVersion;
 	versions: PackageVersion[];
 };
+export interface PackageVersion {
+	name: string;
+	description: string;
+	version: string;
+}
+
+export interface OutdatedPackage extends Package{
+	current_version: string;
+}

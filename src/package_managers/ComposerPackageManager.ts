@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PackageFetchResponse } from '../types/PackageManager';
+import { Package } from '../types/PackageManager';
 import { PackageManager } from './PackageManager';
 
 class ComposerPackageManager extends PackageManager {
@@ -17,7 +17,7 @@ class ComposerPackageManager extends PackageManager {
 		return ComposerPackageManager.instance;
 	}
 
-	fetchPackage(packageName: string): Promise<PackageFetchResponse> {
+	fetchPackage(packageName: string): Promise<Package> {
 		return axios.get(`${this.apiUrl}/${packageName}`);
 	}
 }

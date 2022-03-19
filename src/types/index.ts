@@ -1,1 +1,1 @@
-export * as Git from "./Git";
+export * as Git from './Git';

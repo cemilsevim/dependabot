@@ -4,10 +4,7 @@ import { PackageManager } from './PackageManager';
 
 class ComposerPackageManager extends PackageManager {
 	private static instance: ComposerPackageManager;
-
-	private constructor() {
-		super('');
-	}
+	private apiUrl: string = '';
 
 	public static getInstance(): ComposerPackageManager {
 		if (!ComposerPackageManager.instance) {

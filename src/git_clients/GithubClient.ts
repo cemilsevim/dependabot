@@ -5,10 +5,12 @@ import FileNotFoundError from '../errors/git/GCFileNotFoundError';
 
 class GithubClient extends Client {
 	private static instance: GithubClient;
-	private searchCodeApiUrl = `${this.apiUrl}/search/code`;
+	private apiUrl = `https://api.github.com`;
+	private searchCodeApiUrl: string;
 
 	private constructor() {
-		super('https://api.github.com');
+		super();
+		this.searchCodeApiUrl = `${this.apiUrl}/search/code`;
 	}
 
 	public static getInstance(): GithubClient {
@@ -60,7 +62,7 @@ class GithubClient extends Client {
 		q += filename;
 
 		const searchResultResponse = await axios.get(
-			`${this.searchCodeApiUrl}?${q}`
+			`${this.searchCodeApiUrl}?${q}`,
 		);
 		const searchResultResponseData = searchResultResponse.data;
 		const items = searchResultResponseData.items;

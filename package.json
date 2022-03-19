@@ -2,6 +2,7 @@
   "name": "dependabot",
   "version": "0.0.0",
   "description": "",
+  "main": "build/src/main.js",
   "engines": {
     "node": ">= 12.20.2"
   },

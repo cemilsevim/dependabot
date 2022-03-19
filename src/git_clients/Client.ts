@@ -1,12 +1,6 @@
 import { Git } from '../types';
 
 export abstract class Client {
-	protected apiUrl: string;
-
-	constructor(apiUrl: string) {
-		this.apiUrl = apiUrl;
-	}
-
 	abstract fetchFileContents(
 		repositoryUrl: string,
 		fileNames: string[]

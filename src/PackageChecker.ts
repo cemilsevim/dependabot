@@ -1,66 +1,49 @@
-import PackageManagerConfig from './config/PackageManagerConfig';
-import FileFetcher from './FileFetcher';
-import FileParser from './FileParser';
-import { PackageManagerFactory } from './package_managers/PackageManagerFactory';
-import { PackageManagementFile } from './types/PackageManagementFiles';
-import { OutdatedPackage } from './types/PackageManager';
+import PackageResolver from './PackageResolver';
+import { ResolvedPackages, ResolvedPackage } from './types/PackageManager';
 
 class PackageChecker {
-	private fileFetcher: FileFetcher;
-	private fileParser: FileParser;
+	private packageResolver: PackageResolver;
 
 	constructor() {
-		this.fileFetcher = new FileFetcher();
-		this.fileParser = new FileParser();
+		this.packageResolver = PackageResolver.getInstance();
 	}
 
-	async findOutdatedPackages(repositoryUrl: string) {
-		const outDatedPackages: OutdatedPackage[] = [];
-		const gitFetchedFileContents = await this.fileFetcher.fetch(
+	async findOutdatedPackages(
+		repositoryUrl: string,
+	): Promise<ResolvedPackages> {
+		const outdatedPackages: ResolvedPackages = [];
+
+		const resolvedPackages = await this.packageResolver.resolve(
 			repositoryUrl,
-			PackageManagerConfig.managementFiles
 		);
-		const gitFileContents = gitFetchedFileContents.fileContents;
-		const packageManagementFiles =
-			gitFileContents as PackageManagementFile[];
-		const parsedFiles = await this.fileParser.parse(packageManagementFiles);
+		for (const resolvedPackage of resolvedPackages) {
+			const outdatePackage: ResolvedPackage[] = [];
 
-		for (const parsedFile of parsedFiles) {
-			console.log(`${parsedFile.path} checking...`);
-			const dependencies = parsedFile.dependencies;
-			if (dependencies) {
-				const packageManagerName =
-					PackageManagerConfig.fileManagers[parsedFile.name];
-				const packageManager =
-					PackageManagerFactory.getPackageManagerInstance(
-						packageManagerName
-					);
-				for (let [packageName, packageVersion] of Object.entries(
-					dependencies
-				)) {
-					packageVersion = packageVersion
-						.replace('^', '')
-						.replace('~', '');
-					const packageDetail = await packageManager.fetchPackage(
-						packageName
-					);
-					if (packageVersion != packageDetail.latestVersion.version) {
-						console.log(`'${packageName}' package is outdated.`);
+			const packages = resolvedPackage.packages;
+			for (const packageDetail of packages) {
+				const packageName = packageDetail.name;
+				const packageLatestVersion =
+					packageDetail.latestVersion.version;
+				const packageCurrentVersion = packageDetail.current_version;
+				if (packageCurrentVersion !== packageLatestVersion) {
+					console.log(`'${packageName}' package is outdated.`);
 
-						outDatedPackages.push({
-							...packageDetail,
-							current_version: packageVersion,
-						});
-					} else {
-						console.log(`'${packageName}' package is up to date.`);
-					}
+					outdatePackage.push({
+						...packageDetail,
+						current_version: packageCurrentVersion,
+					});
+				} else {
+					console.log(`'${packageName}' package is up to date.`);
 				}
-			} else {
-				console.warn(`${parsedFile.path} not found dependencies.`);
 			}
+
+			outdatedPackages.push({
+				path: resolvedPackage.path,
+				packages: outdatePackage,
+			});
 		}
 
-		return outDatedPackages;
+		return outdatedPackages;
 	}
 }
 

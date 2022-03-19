@@ -6,15 +6,25 @@ import {
 } from './types/PackageManagementFiles';
 
 class FileParser {
+	private static instance: FileParser;
+
+	public static getInstance(): FileParser {
+		if (!FileParser.instance) {
+			FileParser.instance = new FileParser();
+		}
+
+		return FileParser.instance;
+	}
+
 	parse(
-		packageManagementFiles: PackageManagementFile[]
+		packageManagementFiles: PackageManagementFile[],
 	): ParsedPackageManagementFile[] {
 		const parsedPackageManagementFiles: ParsedPackageManagementFile[] = [];
 
 		packageManagementFiles.forEach((packageManagementFile) => {
 			try {
 				const file = PackageManagementFileFactory.getFileInstance(
-					packageManagementFile.name as PackageManagementFiles
+					packageManagementFile.name,
 				);
 				file.content = packageManagementFile.content;
 				const parsedContent = file.parse();
@@ -26,7 +36,7 @@ class FileParser {
 					path: packageManagementFile.path,
 					size: packageManagementFile.size,
 				};
-	
+
 				parsedPackageManagementFiles.push(parsedPackageManagementFile);
 			} catch (error) {
 				console.error('File parsing error!', error);

@@ -12,6 +12,11 @@ export interface PackageVersion {
 	version: string;
 }
 
-export interface OutdatedPackage extends Package{
+export interface ResolvedPackage extends Package {
 	current_version: string;
 }
+
+export type ResolvedPackages = {
+	path: string;
+	packages: ResolvedPackage[];
+}[];

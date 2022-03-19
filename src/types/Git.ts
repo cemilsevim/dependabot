@@ -1,14 +1,14 @@
-import { Client } from "../git_clients/Client";
+import { Client } from '../git_clients/Client';
 
 export type GitClientNames = 'github';
 export interface FileContent {
-    name: string;
-    path: string;
-    content: string;
-    size: number;
+	name: string;
+	path: string;
+	content: string;
+	size: number;
 }
 
 export interface FetchedFileContents {
-    client: Client;
-    fileContents: FileContent[];
-};
+	client: Client;
+	fileContents: FileContent[];
+}

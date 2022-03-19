@@ -4,10 +4,7 @@ import { PackageManager } from './PackageManager';
 
 class NpmPackageManager extends PackageManager {
 	private static instance: NpmPackageManager;
-
-	private constructor() {
-		super('https://registry.npmjs.org');
-	}
+	private apiUrl: string = 'https://registry.npmjs.org';
 
 	public static getInstance(): NpmPackageManager {
 		if (!NpmPackageManager.instance) {
@@ -19,7 +16,7 @@ class NpmPackageManager extends PackageManager {
 
 	async fetchPackage(packageName: string): Promise<Package> {
 		const packageResponse = await axios.get(
-			`${this.apiUrl}/${packageName}`
+			`${this.apiUrl}/${packageName}`,
 		);
 		const packageData = packageResponse.data;
 		const versions = packageData.versions;

@@ -5,14 +5,16 @@ import NpmPackageManager from './NpmPackageManager';
 import { PackageManager } from './PackageManager';
 
 export class PackageManagerFactory {
-	static getPackageManagerInstance(packageManagerName: PackageManagerNames): PackageManager {
+	static getPackageManagerInstance(
+		packageManagerName: PackageManagerNames,
+	): PackageManager {
 		let packageManager: PackageManager;
 
 		if (packageManagerName === 'npm') {
 			packageManager = NpmPackageManager.getInstance();
 		} else if (packageManagerName === 'composer') {
-            packageManager = ComposerPackageManager.getInstance();
-        }else {
+			packageManager = ComposerPackageManager.getInstance();
+		} else {
 			throw new PMFactoryNullError();
 		}
 

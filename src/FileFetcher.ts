@@ -4,12 +4,25 @@ import { ClientFactory } from './git_clients/ClientFactory';
 import { FetchedFileContents, FileContent, GitClientNames } from './types/Git';
 
 class FileFetcher {
-	async fetch(repositoryUrl: string, fileNames: string[]): Promise<FetchedFileContents> {
+	private static instance: FileFetcher;
+
+	public static getInstance(): FileFetcher {
+		if (!FileFetcher.instance) {
+			FileFetcher.instance = new FileFetcher();
+		}
+
+		return FileFetcher.instance;
+	}
+
+	async fetch(
+		repositoryUrl: string,
+		fileNames: string[],
+	): Promise<FetchedFileContents> {
 		const gitProvider = this.getClientNameByRepositoryUrl(repositoryUrl);
 		const gitClient: Client = ClientFactory.getClientInstance(gitProvider);
 		const fileContents = await gitClient.fetchFileContents(
 			repositoryUrl,
-			fileNames
+			fileNames,
 		);
 
 		return {

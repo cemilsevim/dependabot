@@ -3,17 +3,17 @@ export interface NpmManagementFileContent {
 	version: string;
 	description: string;
 	engines: {
-        [key: string]: string;
-    };
+		[key: string]: string;
+	};
 	devDependencies: {
-        [key: string]: string;
-    };
+		[key: string]: string;
+	};
 	scripts: {
-        [key: string]: string;
-    };
+		[key: string]: string;
+	};
 	author: string;
-	license: string; 
+	license: string;
 	dependencies: {
-        [key: string]: string;
-    };
+		[key: string]: string;
+	};
 }
